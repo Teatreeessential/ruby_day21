@@ -1,0 +1,92 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Movies</h1>
+<div class ="row">
+  <% @movies.each do |movie| %>
+    <div class="card col-md-3">
+      <img class="card-img-top" src="<%=movie.image_path.thumb.url%>">
+      <div class="card-body">
+        <h5 class="card-title"><span><%=movie.title%></span></h5>
+        <p class="card-text">장르:<%=movie.genre%></p>
+        <p class="card-text">주연배우:<%=movie.actor%></p>
+        <p class="card-text">감독:<%=movie.director%></p>
+        
+    
+        <%= link_to '영화정보보기',movie_path(movie) ,class:'btn btn-primary'%>
+      </div>
+    </div>
+  <%end%>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @movies.each do |movie| %>
+      <tr>
+        <td><%= link_to 'Show', movie %></td>
+        <td><%= link_to 'Edit', edit_movie_path(movie) %></td>
+        <td><%= link_to 'Destroy', movie, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Movie', new_movie_path %>
+
+<hr>
+<% if user_signed_in?%>
+
+<%=current_user.email%>
+  <%=current_user.email%>
+  <%=link_to '로그아웃', destroy_user_session_path, method: "delete"%>
+<%else%>
+  <%=link_to '로그인', new_user_session_path%>
+<%end%>
+
+<script>
+  // var btn = document.getElementsByClassName("btn")[0];
+  // var count = 0;
+  // var msg ="나 좀 가만히 놔둘레?"
+  // btn.onmouseover = function(){
+  //   count++;
+  //   if(count>3){
+  //     msg="...나 집에 갈레..";
+  //   }
+  //   alert(msg);
+  // }
+  // function func2(){
+  //   alert('하위-2')
+  // }
+  // var btn = document.getElementsByClassName("btn")[0];
+  // btn.addEventListener("mouseover",func2);
+  
+  // var btn2 = document.getElementsByClassName("btn")[1];
+  // btn.onmouseover = func1;
+  // var btn = document.getElementsByClassName("btn")[0]
+  // btn.addEventListener("mouseover",function(){
+  //   var title = document.getElementsByClassName("card-title")[0];
+  //   console.dir(title);
+  //   title.innerText = "Don't touch me..";
+  // })
+  // btn.addEventListener("mouseout",function(){
+  //   var title = document.getElementsByClassName("card-title")[0];
+  //   console.dir(title);
+  //   title.innerText = "test";
+  // })
+  var btn = document.getElementsByClassName("btn")[0];
+  btn.addEventListener("mouseover",function(){
+    btn.setAttribute("class","btn btn-danger");
+  })
+   var btn = document.getElementsByClassName("btn")[0];
+  btn.addEventListener("mouseout",function(){
+    btn.setAttribute("class","btn btn-primary");
+  })
+  
+</script>
