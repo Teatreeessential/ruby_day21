@@ -1,6 +1,8 @@
 class MoviesController < ApplicationController
   before_action :authenticate_user!, except:[:index,:show]
+  before_action :js_authenticate_user!, except:[:index,:show]
   before_action :set_movie, only: [:show, :edit, :update, :destroy]
+  
 
   # GET /movies
   # GET /movies.json
@@ -11,6 +13,8 @@ class MoviesController < ApplicationController
   # GET /movies/1
   # GET /movies/1.json
   def show
+    @like = Like.where(user_id: current_user.id, movie_id: params[:id]).first
+    puts @like.nil?
   end
 
   # GET /movies/new
@@ -61,6 +65,23 @@ class MoviesController < ApplicationController
       format.json { head :no_content }
     end
   end
+ 
+  def like_movie
+    #현재 유저와 params에 담긴 movie간의 
+    #whgdkdy rhksrPfmf tjfwjdgksek.
+    
+    #만약 현재 로그인한 유저가 이미 좋아요를 눌렀을 경우
+    #해당 like 인스턴스 삭제
+    #새로 누른 경우
+    #좋아요 관계 설정
+    @like = Like.where(user_id:current_user.id,movie_id: params[:movie_id]).first
+    puts @like.nil?
+    if @like.nil?
+      @like = Like.create(user_id: current_user.id,movie_id: params[:movie_id])
+    else
+      @like.destroy
+    end
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -73,4 +94,6 @@ class MoviesController < ApplicationController
     def movie_params
       params.require(:movie).permit(:title,:genre,:director,:actor,:description, :image_path)
     end
+    
+    
 end

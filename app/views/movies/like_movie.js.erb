@@ -1,0 +1,16 @@
+
+if(<%=@like.frozen?%>){
+    <!--frozen 이 true 좋아요 눌린인간이 취소함 다시 좋아요 표시 되게끔함-->
+    $('.like').text("좋아요").toggleClass("btn-warning btn-info text-white");
+    alert('좋아요 취소함')
+     
+}else{
+     $('.like').text("좋아요 취소").toggleClass("btn-warning btn-info text-white");
+     alert('좋아요')
+     
+}
+//좋아요가 취소된 경우
+// 좋아요 취소버튼 -> 좋아요 버튼
+
+//좋아요가 새로 눌린 경우
+//좋아요 버튼 -> 좋아요 취소버튼으로 
