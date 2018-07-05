@@ -1,0 +1,3 @@
+var edit_comment =$('.comment-detail-<%=@comment.id%>')
+edit_comment.html('<%=@comment.contents%>'); //수정폼에서의 값을 .comment-detail 로 들어가게끔
+$('.update-comment').text("수정").removeClass("btn btn-dark update-comment").addClass("btn btn-warning edit-comment")

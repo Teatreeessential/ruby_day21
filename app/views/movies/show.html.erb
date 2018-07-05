@@ -5,10 +5,28 @@
 <%= link_to 'Back', movies_path %>
 <hr>
 <% if(@like.nil?)%>
-    <button class="btn btn-info like">좋아요</button>
+    <button class="btn btn-info like">좋아요(<span class='like-count'><%=@movie.likes.count%></span>)</button>
 <%else%>
-    <button class="btn btn-warning text-white like">좋아요 취소</button>
+    <button class="btn btn-warning text-white like">좋아요 취소(<span class='like-count'><%=@movie.likes.count%></span>)</button>
 <%end%>
+<hr>
+<form class ="text-right comment">
+    <input class="form-control comment-contents">
+    <input type="submit" class="btn btn-success float-right" value="댓글쓰기">
+</form>
+<h3>댓글</h3>
+<hr>
+<ul class="list-group comment-list">
+    <%@movie.comments.reverse.each do |comment|%>
+        <li class="comment-<%=comment.id%> list-group-item d-flex justify-content-between">
+            <span class="comment-detail-<%=comment.id%>"><%=comment.contents%></span>
+            <div>
+                <button data-id="<%=comment.id%>" class="btn btn-warning text-white edit-comment">수정</button>
+                <button data-id="<%=comment.id%>" class="btn btn-danger destroy-comment">삭제</button>
+            </div>
+        </li>
+    <%end%>
+</ul>
 <script>
     $(document).ready(function(){
         $('.like').on('click',function(){
@@ -17,5 +35,62 @@
                 url:'/likes/<%=@movie.id%>'
             });
         });
+        
+        $('.comment').on('submit',function(e){
+            e.preventDefault(); //submit event를 이 로직에서 지워버린다.
+            var comm = $('.comment-contents').val();
+            $.ajax({
+                type:'POST',
+                url:'/movies/<%=@movie.id%>/comments',
+                data:{
+                    comm:comm
+                }
+            })
+           $('.comment-contents').val(''); //댓글 입력창의 글을 날림
+        });
+        
+        $(document).on('click','.destroy-comment',function(){
+            
+            var comment_id = $(this).attr('data-id');
+            //$(this).data('id');
+            console.log(comment_id)
+            $.ajax({
+                type:"DELETE",
+                url:"/movies/comments/"+comment_id
+            })
+        })
+        
+        $(document).on('click','.edit-comment',function(){
+            
+            if ($('.update-comment').length===0){
+                 var comment_id = $(this).data('id'); //해당 버튼의 data-id 값
+                 var edit_comment = $(`.comment-detail-${comment_id}`); //내용이 있는 span dom객체
+                 var contents = edit_comment.text().trim();//span dom 객체에서 내용을 가져옴
+                 $(`.comment-detail-${comment_id}`).html(`
+                 <input type="text" value="${contents}" class="form-control edit-comment-${comment_id}">`);
+                 $(this).text("확인").removeClass("edit-comment").addClass("btn btn-dark update-comment")
+                 //해당 버튼의 수정이라는 부분이 확인으로 바뀐다.
+            }else{
+                alert('댓글 수정은 하나만 가능합니다.');
+                return false;
+            }
+        });
+       
+        $(document).on('click','.update-comment',function(){
+            console.log("update")
+            var comment_id = $(this).data('id');
+            var comment_form = $(`.edit-comment-${comment_id}`); //수정 폼
+            //해당 버튼의 dom객체의 클래스 속성값을 변경 기존 버튼의 속성을 지우고 추가함.
+            
+            $.ajax({
+                url: "/movies/comments/" + comment_id,
+                method: "PATCH",
+                data: {
+                    contents: comment_form.val()
+                }
+            })
+        })
+    
+        
     });
 </script>

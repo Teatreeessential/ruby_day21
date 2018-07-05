@@ -1,12 +1,15 @@
+var like_count = parseInt($('.like-count').text());
 
 if(<%=@like.frozen?%>){
-    <!--frozen 이 true 좋아요 눌린인간이 취소함 다시 좋아요 표시 되게끔함-->
-    $('.like').text("좋아요").toggleClass("btn-warning btn-info text-white");
-    alert('좋아요 취소함')
+    <!--frozen이 true라는 것은 like테이블의 인스턴스가삭제 되었다는 뜻 좋아요한 사람이 좋아요 취소한것 따라서 -1하는것-->
+    like_count = like_count -1
+    $('.like').html(`좋아요(<span class='like-count'>${like_count}</span>)`).toggleClass("btn-warning btn-info text-white");
+   
      
 }else{
-     $('.like').text("좋아요 취소").toggleClass("btn-warning btn-info text-white");
-     alert('좋아요')
+    like_count = like_count +1
+     $('.like').html(`좋아요 취소(<span class="like-count">${like_count}</span>)`).toggleClass("btn-warning btn-info text-white");
+    
      
 }
 //좋아요가 취소된 경우

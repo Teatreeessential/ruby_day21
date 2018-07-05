@@ -1,7 +1,7 @@
 class MoviesController < ApplicationController
   before_action :authenticate_user!, except:[:index,:show]
   before_action :js_authenticate_user!, except:[:index,:show]
-  before_action :set_movie, only: [:show, :edit, :update, :destroy]
+  before_action :set_movie, only: [:show, :edit, :update, :destroy,:create_comment]
   
 
   # GET /movies
@@ -13,8 +13,7 @@ class MoviesController < ApplicationController
   # GET /movies/1
   # GET /movies/1.json
   def show
-    @like = Like.where(user_id: current_user.id, movie_id: params[:id]).first
-    puts @like.nil?
+      @like = Like.where(user_id: current_user.id, movie_id: params[:id]).first if user_signed_in?
   end
 
   # GET /movies/new
@@ -74,13 +73,26 @@ class MoviesController < ApplicationController
     #해당 like 인스턴스 삭제
     #새로 누른 경우
     #좋아요 관계 설정
-    @like = Like.where(user_id:current_user.id,movie_id: params[:movie_id]).first
+    @like = Like.where(user_id: current_user.id,movie_id: params[:movie_id]).first
     puts @like.nil?
     if @like.nil?
       @like = Like.create(user_id: current_user.id,movie_id: params[:movie_id])
     else
       @like.destroy
     end
+  end
+  
+  def create_comment
+    @comm=Comment.create(user_id: current_user.id,movie_id: @movie.id,contents: params[:comm])
+  end
+  
+  def destroy_comment
+    @comment =Comment.find(params[:comment_id]).destroy
+  end
+  
+  def update_comment
+    @comment = Comment.find(params[:comment_id]);
+    @comment.update(contents: params[:contents]);
   end
 
   private
