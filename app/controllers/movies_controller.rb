@@ -1,13 +1,16 @@
 class MoviesController < ApplicationController
-  before_action :authenticate_user!, except:[:index,:show]
-  before_action :js_authenticate_user!, except:[:index,:show]
+  before_action :authenticate_user!, except:[:index,:show,:search_movie]
+  before_action :js_authenticate_user!, only:[:like_movie,:create_comment,:destroy_comment,:update_comment]
   before_action :set_movie, only: [:show, :edit, :update, :destroy,:create_comment]
   
 
   # GET /movies
   # GET /movies.json
   def index
-    @movies = Movie.all
+    @movies = Movie.page(params[:page])
+    
+    
+   
   end
 
   # GET /movies/1
@@ -83,7 +86,7 @@ class MoviesController < ApplicationController
   end
   
   def create_comment
-    @comm=Comment.create(user_id: current_user.id,movie_id: @movie.id,contents: params[:comm])
+    @comment=Comment.create(user_id: current_user.id,movie_id: @movie.id,contents: params[:comm])
   end
   
   def destroy_comment
@@ -93,6 +96,17 @@ class MoviesController < ApplicationController
   def update_comment
     @comment = Comment.find(params[:comment_id]);
     @comment.update(contents: params[:contents]);
+  end
+  
+  def search_movie
+    respond_to do |format|
+      if params[:q].strip.empty?
+        format.js {render 'no_content'}
+      else
+        @movies = Movie.where("title Like ?","#{params[:q]}%")
+        format.js {render 'search_movie'}
+      end
+    end
   end
 
   private

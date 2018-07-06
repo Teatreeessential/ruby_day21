@@ -1,6 +1,10 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Movies</h1>
+<h1 id="title">Movies</h1>
+<input type ="text" class="form-control movie-title">
+<div class ="recomm-movie d-flex justify-content-start">
+  
+</div>
 <div class ="row">
   <% @movies.each do |movie| %>
     <div class="card col-md-3">
@@ -26,17 +30,18 @@
   </thead>
 
   <tbody>
-    <% @movies.each do |movie| %>
-      <tr>
-        <td><%= link_to 'Show', movie %></td>
-        <td><%= link_to 'Edit', edit_movie_path(movie) %></td>
-        <td><%= link_to 'Destroy', movie, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
+    <!--<% @movies.each do |movie| %>-->
+    <!--  <tr>-->
+    <!--    <td><%= link_to 'Show', movie %></td>-->
+    <!--    <td><%= link_to 'Edit', edit_movie_path(movie) %></td>-->
+    <!--    <td><%= link_to 'Destroy', movie, method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
+    <!--  </tr>-->
+    <!--<% end %>-->
   </tbody>
 </table>
 
 <br>
+<%= paginate @movies, theme: 'twitter-bootstrap-4'%>
 
 <%= link_to 'New Movie', new_movie_path %>
 
@@ -100,7 +105,18 @@
 //   })//텍스트 값 변경
   
 // })
-  
+  $(document).ready(function(){
+    $('.movie-title').on('keyup',function(){
+      var title = $(this).val();
+     
+      $.ajax({
+        url: '/movies/search_movie',
+        data:{
+          q: title
+        }
+      })
+    })
+  });
   
   
 </script>

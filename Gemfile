@@ -4,7 +4,10 @@ git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
   "https://github.com/#{repo_name}.git"
 end
-
+#pagination
+gem 'kaminari'
+gem 'bootstrap4-kaminari-views'
+gem 'faker'
 #beautyfy
 gem 'bootstrap', '~>4.1.1'
 #authenticate

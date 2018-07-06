@@ -3,4 +3,6 @@ class Movie < ApplicationRecord
     has_many :likes
     has_many :comments
     has_many :users, through: :likes
+    
+    paginates_per 8
 end
