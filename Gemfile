@@ -4,7 +4,12 @@ git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
   "https://github.com/#{repo_name}.git"
 end
+gem 'rest-client'
+gem 'figaro'
+gem 'omniauth-google-oauth2'
+gem 'rails_admin'
 #pagination
+gem 'summernote-rails', '~> 0.8.10.0'
 gem 'kaminari'
 gem 'bootstrap4-kaminari-views'
 gem 'faker'
